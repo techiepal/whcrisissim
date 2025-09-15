@@ -1,0 +1,1265 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Crisis Simulation - Storyboard Panels</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for enhanced design */
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .panel-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            transform: scale(1);
+            position: relative;
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .panel-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+        
+        .panel-number {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .image-container {
+            height: 200px;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #60a5fa, #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        .image-placeholder:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .scene-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1f2937;
+            transition: color 0.3s ease;
+        }
+        
+        .scene-caption {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .section-header {
+            position: relative;
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .close:hover {
+            color: #000;
+            transform: rotate(90deg);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-body {
+            padding: 20px 0;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+            border: 1px solid #d1d5da;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: #d1d5da;
+            transform: translateY(-2px);
+        }
+        
+        /* Counter animations */
+        .counter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3b82f6;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .grid.md\:grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 5% auto;
+            }
+        }
+        
+        /* Interactive navigation */
+        .nav-link {
+            transition: all 0.3s ease;
+            padding: 10px 0;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+        
+        /* Additional styling for call-to-action section */
+        .cta-section {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 40px 0;
+            border-radius: 16px;
+            margin: 40px 0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button {
+            background: white;
+            color: #3b82f6;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Footer enhancements */
+        .footer-resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .resource-item {
+            margin-bottom: 15px;
+        }
+        
+        .resource-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+        
+        .resource-item ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .resource-item li {
+            margin-bottom: 8px;
+        }
+        
+        .resource-item a {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .resource-item a:hover {
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-white rounded-full filter blur-xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-blue-300 rounded-full filter blur-xl"></div>
+        </div>
+        <div class="container mx-auto px-6 py-8 relative z-10">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold mb-1">Warehouse Crisis Simulation</h1>
+                        <p class="text-blue-100 text-lg">Storyboard Panels</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-blue-100 text-sm">Version 1.0</p>
+                    <p class="text-blue-100 text-sm">Last Updated: January 2024</p>
+                </div>
+            </div>
+            
+            <!-- Animated counter -->
+            <div class="mt-6 flex items-center justify-center">
+                <div class="text-center">
+                    <p class="text-blue-100 text-sm">Total Panels:</p>
+                    <div class="counter">8</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-6">
+            <div class="flex overflow-x-auto space-x-8 py-4">
+                <a href="#overview" class="nav-link text-blue-600 font-medium whitespace-nowrap hover:text-blue-800 transition-colors">Overview</a>
+                <a href="#storyboard" class="nav-link text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap transition-colors">Storyboard</a>
+                <a href="#facilitator-guide" class="nav-link text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap transition-colors">Facilitator Guide</a>
+                <a href="#learning-objectives" class="nav-link text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap transition-colors">Learning Objectives</a>
+                <a href="#production-notes" class="nav-link text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap transition-colors">Production Notes</a>
+                <a href="#implementation" class="nav-link text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap transition-colors">Implementation</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Overview Section -->
+        <section id="overview" class="mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-shadow">
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold text-gray-800 gradient-text">Simulation Overview</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Purpose</h3>
+                        <p class="text-gray-600 mb-4">
+                            This simulation is designed to help warehouse teams practice crisis response in a safe, controlled environment. 
+                            By simulating real-world challenges like system failures and operational disruptions, participants can develop 
+                            critical decision-making skills without the risks associated with actual emergencies.
+                        </p>
+                        
+                        <div class="highlight-box">
+                            <p class="text-sm text-gray-700">
+                                <strong>Key Benefit:</strong> Teams learn how to adapt workflows, communicate effectively under pressure, 
+                                and make strategic decisions during unexpected crises.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Target Audience</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                Warehouse supervisors and managers
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                Operations team leads
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                IT support staff for warehouse systems
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                Customer service representatives
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Storyboard Section -->
+        <section id="storyboard" class="mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-shadow">
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold text-gray-800 gradient-text">Storyboard Sequence</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Panel 1 -->
+                    <div class="panel-card relative group" data-panel="1">
+                        <div class="panel-number">1</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-warehouse text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Normal Day</h3>
+                            <p class="scene-caption">"It's a routine morning. Orders are flowing, staff are on task, systems are stable."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-clock text-blue-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 8:00 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel1')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2 -->
+                    <div class="panel-card relative group" data-panel="2">
+                        <div class="panel-number">2</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-exclamation-triangle text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">The Trigger</h3>
+                            <p class="scene-caption">"Suddenly, the WMS freezes. No digital pick lists are available."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-bolt text-red-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 8:15 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel2')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3 -->
+                    <div class="panel-card relative group" data-panel="3">
+                        <div class="panel-number">3</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-phone-alt text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Early Response</h3>
+                            <p class="scene-caption">"HQ demands 200 urgent orders. Teams debate switching to manual picking."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-users text-orange-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 8:30 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel3')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 4 -->
+                    <div class="panel-card relative group" data-panel="4">
+                        <div class="panel-number">4</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-cogs text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Escalation</h3>
+                            <p class="scene-caption">"Conveyor failure compounds the crisis. Teams must adapt workflows fast."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-exclamation-circle text-red-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 9:00 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel4')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 5 -->
+                    <div class="panel-card relative group" data-panel="5">
+                        <div class="panel-number">5</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-headset text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Customer Pressure</h3>
+                            <p class="scene-caption">"VIP clients call, threatening escalation if orders are late."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-comments text-yellow-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 9:30 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel5')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 6 -->
+                    <div class="panel-card relative group" data-panel="6">
+                        <div class="panel-number">6</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-balance-scale text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Recovery Choice</h3>
+                            <p class="scene-caption">"Decision point: Continue manual workaround, or wait for IT to restore WMS."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-lightbulb text-blue-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 10:00 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel6')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 7 -->
+                    <div class="panel-card relative group" data-panel="7">
+                        <div class="panel-number">7</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-tasks text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Stabilization</h3>
+                            <p class="scene-caption">"Teams push through backlog, balancing speed, safety, and accuracy."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-arrow-up text-green-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 11:30 AM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel7')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Panel 8 -->
+                    <div class="panel-card relative group" data-panel="8">
+                        <div class="panel-number">8</div>
+                        <div class="image-container">
+                            <div class="image-placeholder">
+                                <i class="fas fa-chart-line text-4xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="scene-title">Debrief</h3>
+                            <p class="scene-caption">"Simulation ends. Team reflects on decisions, gaps, and lessons learned."</p>
+                            <div class="flex items-center">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-thumbs-up text-blue-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-600">Time: 12:00 PM</span>
+                            </div>
+                            <button class="mt-4 text-blue-600 hover:text-blue-800 font-medium text-sm" onclick="openModal('panel8')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Facilitator Guide Section -->
+        <section id="facilitator-guide" class="mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-shadow">
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold text-gray-800 gradient-text">Facilitator Guide</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Guiding Principles</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Create a Safe Environment</p>
+                                    <p class="text-gray-600 text-sm">Ensure all participants feel psychologically safe to make mistakes and explore different solutions.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Encourage Participation</p>
+                                    <p class="text-gray-600 text-sm">Use open-ended questions to draw out diverse perspectives and experiences.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Focus on Process</p>
+                                    <p class="text-gray-600 text-sm">Emphasize decision-making processes over outcomes when reviewing results.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Maintain Realism</p>
+                                    <p class="text-gray-600 text-sm">Keep the simulation grounded in real-world constraints and limitations.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Facilitation Techniques</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Active Listening</p>
+                                    <p class="text-gray-600 text-sm">Paraphrase key points to ensure understanding and show engagement.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Strategic Pausing</p>
+                                    <p class="text-gray-600 text-sm">Pause at critical decision points to allow reflection and discussion.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Probing Questions</p>
+                                    <p class="text-gray-600 text-sm">Ask "why" and "how" questions to uncover underlying assumptions.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Real-time Feedback</p>
+                                    <p class="text-gray-600 text-sm">Provide immediate feedback on communication and decision-making patterns.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Objectives Section -->
+        <section id="learning-objectives" class="mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-shadow">
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold text-gray-800 gradient-text">Learning Objectives</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="border-l-4 border-blue-500 pl-6 py-2">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Primary Objectives</h3>
+                        <ul class="mt-3 space-y-4">
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-blue-600 text-xs font-bold">1</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Identify early warning signs of system failures</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-blue-600 text-xs font-bold">2</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Develop effective crisis communication protocols</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-blue-600 text-xs font-bold">3</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Implement adaptive workflow solutions during disruptions</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-blue-600 text-xs font-bold">4</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Balance competing priorities under pressure</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border-l-4 border-green-500 pl-6 py-2">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Secondary Objectives</h3>
+                        <ul class="mt-3 space-y-4">
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-green-600 text-xs font-bold">A</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Evaluate trade-offs between speed, accuracy, and safety</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-green-600 text-xs font-bold">B</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Assess impact of decisions on customer satisfaction</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-green-600 text-xs font-bold">C</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Document lessons learned for future reference</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                    <span class="text-green-600 text-xs font-bold">D</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Collaborate across departments during crises</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Notes Section -->
+        <section id="production-notes" class="mb-16">
+            <div class="bg-white rounded-2xl shadow-xl p-8 card-shadow">
+                <div class="section-header">
+                    <h2 class="text-2xl font-bold text-gray-800 gradient-text">Production Notes</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-paint-brush text-purple-500 mr-2"></i>
+                            Visual Design
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start bg-purple-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-purple-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Consistent Color Coding</p>
+                                    <p class="text-sm text-gray-600">Use blue for normal operations, red for crises, yellow for warnings</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-purple-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-purple-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Animated Transitions</p>
+                                    <p class="text-sm text-gray-600">Smooth fade transitions between panels to maintain flow</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-purple-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-purple-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Iconography</p>
+                                    <p class="text-sm text-gray-600">Use consistent icons for time, status, and action items</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                            <i class="fas fa-cogs text-blue-500 mr-2"></i>
+                            Technical Requirements
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start bg-blue-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-blue-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Responsive Design</p>
+                                    <p class="text-sm text-gray-600">Optimized for presentation and e-learning platforms</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-blue-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-blue-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Accessibility</p>
+                                    <p class="text-sm text-gray-600">Include alt text for all visual elements</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-blue-50 p-3 rounded-lg">
+                                <i class="fas fa-circle text-blue-400 text-xs mt-2 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Interactive Elements</p>
+                                    <p class="text-sm text-gray-600">Clickable panels for detailed information</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-clipboard-check text-green-500 mr-2"></i>
+                        Quality Assurance Checklist
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Verify all learning objectives are addressed</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Ensure visual cues match captions</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Confirm timeline consistency</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Test all animations and transitions</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Validate audio quality and clarity</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Review for accessibility compliance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Section -->
+        <section id="implementation" class="mb-16">
+            <div class="cta-section">
+                <div class="container mx-auto px-6 py-12">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold mb-6">Ready to Implement?</h2>
+                        <p class="text-white text-lg mb-8">Get started with your warehouse crisis simulation today and prepare your team for real-world challenges.</p>
+                        <button class="cta-button" onclick="alert('Implementation guide will be sent to your email.')">
+                            Download Implementation Guide
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Document Information</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Created: January 2024
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-user-edit mr-2"></i>
+                            Author: Training & Development Team
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-code-branch mr-2"></i>
+                            Version: 1.0
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Next Steps</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-green-400"></i>
+                            SME Review & Feedback
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-yellow-400"></i>
+                            Final Revisions
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-blue-400"></i>
+                            Production Handoff
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <p class="text-gray-300 mb-4">For questions about this document, please contact the Training & Development Team.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-resources mt-12">
+                <div class="resource-item">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Training Materials</a></li>
+                        <li><a href="#">Facilitator Guides</a></li>
+                        <li><a href="#">Participant Workbooks</a></li>
+                        <li><a href="#">Evaluation Forms</a></li>
+                    </ul>
+                </div>
+                <div class="resource-item">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Technical Support</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Feedback Form</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="resource-item">
+                    <h4>Related Content</h4>
+                    <ul>
+                        <li><a href="#">Warehouse Management Best Practices</a></li>
+                        <li><a href="#">Emergency Response Protocols</a></li>
+                        <li><a href="#">Supply Chain Resilience</a></li>
+                        <li><a href="#">Operations Efficiency</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2024 Warehouse Crisis Simulation Instructional Design Document. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal HTML -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title" class="text-2xl font-bold"></h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-description" class="text-gray-600"></p>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Key Points:</h3>
+                    <ul id="modal-key-points" class="list-disc pl-5 text-gray-600 space-y-1"></ul>
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-gray-800 mb-2">Facilitator Tips:</h3>
+                    <ul id="modal-facilitator-tips" class="list-disc pl-5 text-gray-600 space-y-1"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn-primary" onclick="alert('Notes saved!')">Save Notes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Highlight active navigation item
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Modal functionality
+        function openModal(panelId) {
+            const modal = document.getElementById('modal');
+            const titleElement = document.getElementById('modal-title');
+            const descriptionElement = document.getElementById('modal-description');
+            const keyPointsElement = document.getElementById('modal-key-points');
+            const facilitatorTipsElement = document.getElementById('modal-facilitator-tips');
+
+            // Define panel details
+            const panelDetails = {
+                'panel1': {
+                    title: 'Normal Day',
+                    description: 'This scene establishes the baseline for the simulation. The warehouse is operating normally with all systems functioning as expected.',
+                    keyPoints: [
+                        'All systems are online and functional',
+                        'Staff are following standard operating procedures',
+                        'Order processing is at normal capacity',
+                        'No immediate issues or concerns'
+                    ],
+                    facilitatorTips: [
+                        'Observe team dynamics and communication patterns',
+                        'Note any potential vulnerabilities in the current workflow',
+                        'Establish baseline performance metrics for comparison later',
+                        'Pay attention to how teams handle routine tasks'
+                    ]
+                },
+                'panel2': {
+                    title: 'The Trigger',
+                    description: 'The warehouse management system (WMS) fails unexpectedly, disrupting the digital workflow and creating an immediate crisis situation.',
+                    keyPoints: [
+                        'WMS is completely offline with no access to digital pick lists',
+                        'Conveyor belt systems may also be affected',
+                        'Teams are now unable to use their usual digital tools',
+                        'Immediate need to find alternative solutions'
+                    ],
+                    facilitatorTips: [
+                        'Observe how quickly teams recognize the problem',
+                        'Note the initial reactions and communication patterns',
+                        'Watch for leadership emergence and decision-making',
+                        'Monitor how teams attempt to troubleshoot the issue'
+                    ]
+                },
+                'panel3': {
+                    title: 'Early Response',
+                    description: 'The team receives urgent orders from headquarters and must decide whether to switch to manual picking methods while waiting for IT support.',
+                    keyPoints: [
+                        'HQ has requested 200 urgent orders',
+                        'Teams must decide between manual picking and waiting for IT',
+                        'Manual picking requires paper-based processes',
+                        'There are concerns about accuracy and efficiency'
+                    ],
+                    facilitatorTips: [
+                        'Listen to the team\'s discussions about risk vs. urgency',
+                        'Observe how they weigh different options',
+                        'Note any conflicts or consensus-building efforts',
+                        'Watch for emerging leaders who take charge'
+                    ]
+                },
+                'panel4': {
+                    title: 'Escalation',
+                    description: 'A conveyor belt jam adds another layer of complexity to the crisis, forcing teams to adapt their workflow and find creative solutions.',
+                    keyPoints: [
+                        'Conveyor belt is jammed with packages',
+                        'Additional manual handling required',
+                        'Workflow bottlenecks are developing',
+                        'Team must prioritize which orders to process first'
+                    ],
+                    facilitatorTips: [
+                        'Observe how teams reorganize their workflow',
+                        'Note any innovative solutions that emerge',
+                        'Watch for stress levels and communication breakdowns',
+                        'Monitor how teams manage the increased workload'
+                    ]
+                },
+                'panel5': {
+                    title: 'Customer Pressure',
+                    description: 'VIP customers begin calling to express concern about delayed orders, adding external pressure to the already stressed team.',
+                    keyPoints: [
+                        'VIP clients are contacting customer service',
+                        'Customers are threatening escalation',
+                        'Team must balance internal operations with customer relations',
+                        'Communication between warehouse and customer service becomes critical'
+                    ],
+                    facilitatorTips: [
+                        'Observe how customer service handles the calls',
+                        'Note the communication between departments',
+                        'Watch for team members who step up to address customer concerns',
+                        'Monitor how the team manages expectations'
+                    ]
+                },
+                'panel6': {
+                    title: 'Recovery Choice',
+                    description: 'The team faces a critical decision point: continue with the manual workaround or wait for IT to restore the WMS.',
+                    keyPoints: [
+                        'IT has provided an estimated time for restoration',
+                        'Manual picking is slower but currently working',
+                        'There are risks with both options',
+                        'Team must make a strategic decision based on available information'
+                    ],
+                    facilitatorTips: [
+                        'Listen to the team\'s analysis of pros and cons',
+                        'Observe how they gather and evaluate information',
+                        'Note any emotional factors influencing the decision',
+                        'Watch for team consensus or conflict resolution'
+                    ]
+                },
+                'panel7': {
+                    title: 'Stabilization',
+                    description: 'Teams work through the backlog of orders, focusing on completing urgent requests while maintaining safety and accuracy standards.',
+                    keyPoints: [
+                        'Team is focused on completing urgent orders',
+                        'Safety protocols are still being followed',
+                        'Accuracy remains a priority despite time pressure',
+                        'Team is managing the backlog systematically'
+                    ],
+                    facilitatorTips: [
+                        'Observe how teams prioritize orders',
+                        'Note any changes in workflow or efficiency',
+                        'Watch for signs of fatigue or burnout',
+                        'Monitor communication and coordination'
+                    ]
+                },
+                'panel8': {
+                    title: 'Debrief',
+                    description: 'The simulation concludes with a team debrief session where participants reflect on their decisions, identify gaps, and discuss lessons learned.',
+                    keyPoints: [
+                        'Team gathers to review the simulation',
+                        'Participants share their experiences and observations',
+                        'Facilitator guides the discussion with targeted questions',
+                        'Team identifies areas for improvement'
+                    ],
+                    facilitatorTips: [
+                        'Ask open-ended questions to encourage reflection',
+                        'Guide the discussion toward key learning points',
+                        'Help the team identify actionable improvements',
+                        'Encourage constructive feedback among team members'
+                    ]
+                }
+            };
+
+            // Set modal content
+            const details = panelDetails[panelId];
+            titleElement.textContent = details.title;
+            descriptionElement.textContent = details.description;
+            
+            // Clear previous list items
+            keyPointsElement.innerHTML = '';
+            facilitatorTipsElement.innerHTML = '';
+            
+            // Add key points
+            details.keyPoints.forEach(point => {
+                const li = document.createElement('li');
+                li.textContent = point;
+                keyPointsElement.appendChild(li);
+            });
+            
+            // Add facilitator tips
+            details.facilitatorTips.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                facilitatorTipsElement.appendChild(li);
+            });
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Handle escape key
+        window.onkeydown = function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('modal');
+                if (modal.style.display === 'block') {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+```
